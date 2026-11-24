@@ -8,7 +8,7 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp -DskipTests package
 
 # Run: JRE only, unprivileged user.
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 LABEL org.opencontainers.image.title="brazil-macro-mcp" \
       org.opencontainers.image.description="MCP server for cited, fail-closed Banco Central do Brasil data" \
       org.opencontainers.image.source="https://github.com/gharachide/brazil-macro-mcp" \
