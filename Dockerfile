@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Build: same Maven line as the wrapper, dependencies cached between builds.
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3.9-eclipse-temurin-26 AS build
 WORKDIR /workspace
 COPY pom.xml .
 COPY src ./src
