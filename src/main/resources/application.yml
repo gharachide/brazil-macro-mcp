@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: brazil-macro-mcp
+  main:
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: brazil-macro-mcp
+        version: 0.1.0
+        type: SYNC
+        protocol: STREAMABLE
+        streamable-http:
+          mcp-endpoint: /mcp
+        capabilities:
+          tool: true
+          resource: true
+          prompt: true
+          completion: false
+        instructions: >-
+          Official macroeconomic data from Banco Central do Brasil: SGS time series (IPCA, INPC, IGP-M,
+          Selic, CDI, USD/BRL) and the Focus market survey. Rules: (1) quote numbers exactly as returned
+          and cite them with citation.citeAs or the URLs in citation.requests; (2) if a tool returns an
+          error, do not estimate, interpolate or recall values from memory: tell the user which data is
+          unavailable and why; (3) use accumulated_change and real_return for compounding instead of doing
+          the arithmetic yourself; (4) monthly observations are dated on the first day of the reference
+          month; (5) a citation with stale=true was served from cache while the BCB was unavailable, so
+          state its retrieval time.
+
+server:
+  # Local-only by default; the container image sets SERVER_ADDRESS=0.0.0.0.
+  address: 127.0.0.1
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  tracing:
+    sampling:
+      # Every tool call is traced; spans leave the process only when an OTLP endpoint is set:
+      # MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT=http://localhost:4318/v1/traces
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        # Metrics are scraped from /actuator/prometheus; enable OTLP push only if you need it.
+        enabled: false
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        brazil_macro.tool.calls: true
+        brazil_macro.upstream.requests: true
+  health:
+    # Keep host details (paths, certificate chains) out of the public health response.
+    diskspace:
+      enabled: false
+    ssl:
+      enabled: false
+
+brazil-macro:
+  audit:
+    path: ${user.home}/.brazil-macro-mcp/audit.jsonl

@@ -1,0 +1,9 @@
+# STDIO transport for desktop clients: no web server, and stdout carries only MCP messages
+# (logs go to stderr, see logback-spring.xml).
+spring:
+  main:
+    web-application-type: none
+  ai:
+    mcp:
+      server:
+        stdio: true

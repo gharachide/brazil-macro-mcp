@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Every log line goes to stderr: in STDIO mode, stdout is reserved for MCP JSON-RPC messages.
+  Lines carry the trace and span ids of the tool call. With the "json-logs" profile they are
+  written as ECS JSON, ready for Elasticsearch, Loki or any log pipeline.
+-->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProfile name="json-logs">
+        <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+            <target>System.err</target>
+            <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+                <format>ecs</format>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+    </springProfile>
+    <springProfile name="!json-logs">
+        <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+            <target>System.err</target>
+            <encoder>
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+                <charset>${CONSOLE_LOG_CHARSET}</charset>
+            </encoder>
+        </appender>
+    </springProfile>
+    <root level="INFO">
+        <appender-ref ref="STDERR"/>
+    </root>
+</configuration>

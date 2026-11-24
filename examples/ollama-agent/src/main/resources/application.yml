@@ -1,0 +1,33 @@
+agent:
+  # Path to the MCP server jar; build it in the repository root with ./mvnw package.
+  server-jar: ../../target/brazil-macro-mcp.jar
+
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        # Any local model with tool calling works; pull it first with: ollama pull gemma4:e2b
+        # (Ollama 0.20.2 or newer). See the README for larger models.
+        model: gemma4:e2b
+        options:
+          temperature: 0
+    mcp:
+      client:
+        name: ollama-agent
+        request-timeout: 60s
+        stdio:
+          connections:
+            brazil-macro:
+              command: java
+              args:
+                - -jar
+                - ${agent.server-jar}
+                - --spring.profiles.active=stdio
+
+logging:
+  level:
+    root: WARN

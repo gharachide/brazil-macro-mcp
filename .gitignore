@@ -1,0 +1,34 @@
+# Build output (also holds the eval reports: examples/ollama-agent/target/eval)
+target/
+out/
+bin/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.sts4-cache/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and local data
+*.log
+*.jsonl
+/audit/
+
+# Local configuration and secrets: never commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.jks
+application-local.yml
+application-local.properties
